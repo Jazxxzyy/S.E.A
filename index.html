@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!--While this line is not required, it is a good idea and allows our html page to scale to the monitor-->
+        <meta name="viewport" content="width=device-width, inital-scale=1.0">
+        <title>Space Explorer Adventure</title>
+        <!--Now leaving HTML and about to start CSS, you know this because of the style tags-->
+        <style>
+            /* Notice that now the comment syntax has a diff start and end showing the difference between the type code languages */
+            /* Style the body */
+            /* when you put a name of a tag then it will style all tags with that name.
+            Please note, this does not mean using the name property */
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: black;
+                margin: 0;
+                padding: 20px;
+            }
+            /* The # symbol is used to style an element with a specific id */
+            /* You cannot have two elements with the same ID  on your page */
+            #game-container{
+                max-width: 600px;
+                margin: auto;
+                padding: 20px;
+                background-color: darkslategrey;
+                border: 1px solid yellow;
+                border-radius: 8px;
+            }
+            /* creating another section besides the game container that way the user has an organized view of gaining credits*/
+            #mission-container{
+                max-width: 400px;
+                margin: auto;
+                padding: 20px;
+                background-color: darkslategrey;
+                border: 1px solid yellow;
+                border-radius: 8px;
+            }
+            #stats {
+                float: left;
+                width: 200px; 
+            }
+            /* The . symbol is used to style one or more elements with a specific class */
+            .ship{
+                border: 1px solid white;
+                margin-bottom: 10pxx;
+                padding: 10px;
+                border-radius: 4px;
+            }
+            /* When you put the name of a tag then it will style all tags with that name.
+            Please note, this does not mean using the name property */
+            button{
+                padding: 5px 10px;
+                margin-top: 10px;
+            }
+            /* Deatils matter adding in a hover for buttons help with selction and style*/
+            button:hover {
+            background-color:rgb(40, 109, 23) 
+            }
+            /* style the back color of the class top-information to dark green*/
+            .top-information{
+                background-color:darkgreen;
+                padding: 10px;
+                border: 1px solid yellowgreen;
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <!--Using HTML our body section starts here-->
+    <body>
+        <div id="game-container">
+            <h1>Spaceport Hub</h1>
+            <div id="directions" class="top-information">
+                <p>Greetings! Spaceport Hub's purpose is to organize Astronaut Explores Missions, Inventory, and ship maintenance.</p>
+                <p>You can upgrade your ship, and defend from aliens better when you complete missions. Completing Missions allows you to gain Exploration Credits.</p>
+                <p>Good Luck, and safe travels Explorer!</p>
+            </div>
+
+            <div id="ships-container">
+                <!--We are going to use JavaScript to add ships here, this can be done using the id ships container-->
+            </div>
+        </div>
+        <!-- We are leaving HTML and going into JavaScript-->
+        <!--Apply the mission container-->
+        <div id="mission-container">
+            <div id="stats">
+                <h2>Exploration Credits: <span id="creditsAmount">0</span></h2>
+            </div>
+            <div id="directions" class="top-information">
+                <h1>Mission Log</h1>
+            </div>
+            <div id="credits" class="top-information">
+                <h2>Join Mission!</h2>
+                <button id="join-mission" onclick="joinMission">To Space (1 ticket)</button>
+            </div>
+            <div id="ticket" class="top-information">               
+                 <h2>Daily Mission limit: <span id="ticketAmount">5</span></h2>
+            </div>
+            <div id="ships-container">
+                <!--We are going to use JavaScript to add ships here, this can be done using the id ships container-->
+            </div>
+        </div>
+        <script>
+            //create variables
+            var creditsAmount
+            var joinMission
+            var ticketAmount
+
+            //create function to update credits
+            function updateStats() {
+                document.getElementById("creditsAmoount").innerHTML = creditsAmount;
+                document.getElementById("joinMission").innerHTML = joinMission;
+                document.getElementById("ticketAmount").innerHTML = ticketAmount;
+            }
+
+
+            // Create our class for a spaceship
+            class SpaceShip{
+                constructor(name, serviceCost){
+                    this.name = name;
+                    this.serviceCost = serviceCost;
+                }
+                // This is a method, it is a function that is part of a class
+                // This method will service the ship and add credits
+                service(){
+                    game.creditsAmount = game.creditsAmount + this.serviceCost;
+                    game.updateStats();
+                }
+            }
+            // Create our game class
+            class Game{
+                constructor(){
+                    this.creditsAmount = 0;
+                    this.ships=[];
+                }
+                //create a method to update the credits on the page
+                updateCreditsDisplay(){
+                    document.getElementById("creditsAmount").innerText = this.credits;
+                }
+                //Create a method to add a ship to the page
+                addShip(ship){
+                    this.ships.push(ship);
+                    this.displayShip(ship);
+                }
+                // Create a method to display a ship on the page
+                displayShip(ship){
+                    const container = document.getElementById("ships-container");
+                    const shipDiv = document.createElement("div");
+                    shipDiv.classList.add("ship");
+                    shipDiv.innerHTML = "<h2>" + ship.name + "</h2><p>Service Cost: " + ship.serviceCost + "credits";
+                    shipDiv.onclick = function(){
+                        ship.service();
+                    };
+                    container.appendChild(shipDiv);
+                }
+            }
+
+            // Create a new game object instance from our class.
+            const game = new Game();
+
+            // Create a new ship object instance from our class.
+            const ships = [
+                new SpaceShip("Starlight Voyager", 100),
+                new SpaceShip("Cosmic Odyssey Cruiser", 200),
+                new SpaceShip("Galactic Pathfinder", 300),
+                new SpaceShip("Nebula Nomad Explorer", 400),
+                new SpaceShip("Solar Serenity Probe", 500),
+            ];
+
+            // Add each ship to the game
+            ships.forEach(ship => game.addShip(ship));
+
+            //Create a function to remove tickets
+            function joinMission(){
+                if (joinMission >= ticket) {
+                    ticket = ticket - 1;
+                    creditsAmount = creditsAmount + 500;
+                    updateStats();
+                }
+            }
+
+            // creating function to accomplish mission and gain credits
+            function onclick() {
+                if (ticket >= 1 && joinMission >= 1) {
+                    ticket = ticket -1;
+                    joinMission = joinMission -1;
+                    creditsAmount = creditsAmount + 500
+                    updateStats();
+                }
+            }
+        </script>
+    </body>
+</html>
